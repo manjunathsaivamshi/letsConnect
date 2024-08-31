@@ -21,11 +21,11 @@ export default function Sidebar() {
         <Grid item xs={12} sm={4} md={5} component={Paper} elevation={6} square>
             <Box
             sx={{
-              my: 4,
+              my: 2,
               mx: 4,
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'center'
+              alignItems: 'center',
             }}
           >
             <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
@@ -35,7 +35,12 @@ export default function Sidebar() {
               {signIn? "Sign in":"Sign Up"}
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1}}>
-            <Signin isSignIn={signIn} />
+                <Box sx={{height:'auto',
+              maxHeight:'200px',overflowY:'auto',display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center'}}>
+                    <Signin isSignIn={signIn} />
+                </Box>
             <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
