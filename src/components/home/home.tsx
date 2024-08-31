@@ -1,6 +1,6 @@
-import { Grid, CssBaseline,Box } from "@mui/material"
-import Signin from "../signin/Signin"
+import { Grid, CssBaseline } from "@mui/material"
 import Dial from "../dialbar/dial"
+import Sidebar from "../signin/Sidebar"
 
 const Home = () => {
   return (
@@ -16,7 +16,7 @@ const Home = () => {
         >
         <Dial></Dial>
         </Grid>
-        <Signin />
+        <Sidebar />
         </Grid>
       </>
   )

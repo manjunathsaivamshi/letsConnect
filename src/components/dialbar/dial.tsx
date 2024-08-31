@@ -57,7 +57,7 @@ export default function Dial() {
             </Button>
             }
           {
-          dailBtnfc && <div style={{marginTop:5}} ref={dailRef}><IconsMenu  {...meetingButton}></IconsMenu></div>
+          dailBtnfc && <div style={{marginTop: '5%'}} ref={dailRef}><IconsMenu  {...meetingButton}></IconsMenu></div>
           }
         </Grid>
         <Grid
@@ -66,15 +66,14 @@ export default function Dial() {
           sm={8}
           md={7}
         >
-          <Box component="form" noValidate  sx={{ mt: 2.5, color:'red',width:'50%', height:'50%',ml:5 }}>
+          <Box component="form" noValidate  sx={{ mt: 2.5,width:'50%', height:'50%',ml:5 }}>
             <TextField
                 margin="normal"
                 required
                 fullWidth
-                id="email"
+                id="roomId"
                 label={<GroupIcon/>}
-                name="email"
-                autoComplete="email"
+                name="roomId"
                 autoFocus
               />
             </Box>
