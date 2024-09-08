@@ -35,10 +35,7 @@ export default function Sidebar() {
               {signIn? "Sign in":"Sign Up"}
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1}}>
-                <Box sx={{height:'auto',
-              maxHeight:'200px',overflowY:'auto',display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center'}}>
+                <Box sx={{display:'flex',flexDirection:'column'}}>
                     <Signin isSignIn={signIn} />
                 </Box>
             <FormControlLabel

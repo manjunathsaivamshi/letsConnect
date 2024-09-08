@@ -10,7 +10,7 @@ export default function IconsMenu(props:iconsMenu){
         <MenuList>
         {props.icons.map((icon,index)=>{
             return(
-                <MenuItem>
+                <MenuItem onClick={props.onClicks[index]}>
                 <ListItemIcon>{icon}</ListItemIcon>
           <ListItemText> {props.titles[index]} </ListItemText>
         </MenuItem>

@@ -5,18 +5,24 @@ import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import GroupIcon from '@mui/icons-material/Group';
 import { iconsMenu } from "../types/IconsMenu";
 import { useEffect, useRef, useState } from "react";
-
+import { useNavigate } from "react-router-dom";
+import Peer from 'peerjs';
 
 export default function Dial() {
-  const [dailBtnfc,setDailBtnfc]=useState(false)
+  const [dailBtnfc,setDailBtnfc]=useState(false);
   const dailRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate()
 
-  const meetingIcons = [<LinkIcon/>,<WatchLaterIcon/>,];
-  const meetingTitles = ['Start Instant Meeting', 'Create Meeting for Later']
-  const meetingButton : iconsMenu = {
-    icons:meetingIcons,
-    titles:meetingTitles
+  const handleStartInstantMeeting = ()=>{
+
+    const newPeer = new Peer();
+    console.log(newPeer)
+    newPeer.on('open', (id) => {
+      console.log(id);
+      navigate(`/room/${id}`)
+    });
   }
+
   const handleDailBtn = () =>{
     setDailBtnfc(true)
   }
@@ -24,9 +30,17 @@ export default function Dial() {
   const handleClick = (event:MouseEvent)=>{
       if (dailRef.current && !dailRef.current.contains(event.target as Node)) {
         setDailBtnfc(false)
-        console.log('hi')
       } 
     }
+
+  const meetingIcons = [<LinkIcon/>,<WatchLaterIcon/>,];
+  const meetingTitles = ['Start Instant Meeting', 'Create Meeting for Later']
+  const meetingClicks = [handleStartInstantMeeting,()=>{}]
+  const meetingButton : iconsMenu = {
+    icons:meetingIcons,
+    titles:meetingTitles,
+    onClicks:meetingClicks
+  }
     
   useEffect(()=>{
 

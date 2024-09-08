@@ -11,7 +11,6 @@ export default function Signin(isSignIn:signIn) {
        <TextField
         margin="normal"
         required
-        fullWidth
         id="firstName"
         label="First Name"
         name="firstName"
@@ -20,7 +19,6 @@ export default function Signin(isSignIn:signIn) {
       <TextField
         margin="normal"
         required
-        fullWidth
         name="lastName"
         label="Last Name"
         id="lastName"

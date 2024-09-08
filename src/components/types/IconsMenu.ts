@@ -1,5 +1,6 @@
 
 export type iconsMenu ={
     icons: React.ReactNode[],
-    titles: string[]
+    titles: string[],
+    onClicks: React.MouseEventHandler<HTMLLIElement>[]
 }
