@@ -71,7 +71,7 @@ export default function Dial() {
           md={5}
          sx={{display: 'flex',
               flexDirection: 'column',
-              alignItems: 'center',backgroundColor:'red'}}
+              alignItems: 'center'}}
         >
           { !dailBtnfc && 
           <Button disableFocusRipple startIcon={<GroupIcon/>} onClick={handleDailBtn}

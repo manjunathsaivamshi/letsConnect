@@ -10,11 +10,12 @@ interface remotestreamtype {
 const Room = () => {
   const params  = useParams();
   const [stream, setStream] = useState<MediaStream | null>(null);
+  const [joinedPeerId, setJoinedPeerId] = useState("");
   const [remoteStreams, setRemoteStreams] = useState<remotestreamtype>({});
   const roomId = params.id;
   const byJoin = params.byJoin;
-  useEffect(() => {
-    const handleAnswercall = (newPeer:Peer)=>{
+
+  const handleAnswercall = (newPeer:Peer)=>{
         newPeer.on('call', (call) => {
         // Answer incoming call
         if(stream!=null)
@@ -28,20 +29,28 @@ const Room = () => {
       });
     }
 
+  const handleDailCall =(newPeer:Peer,roomId:string,userStream:MediaStream)=>{
+    const call = newPeer.call(roomId, userStream);
+    // if(userStream!=null)
+    //     call.answer(userStream);
+    call.on('stream', (remoteStream) => {
+      setRemoteStreams((prevStreams) => ({
+        ...prevStreams,
+        [call.peer]: remoteStream,
+      }));
+    });
+  }
 
-    const handleDailCall =(newPeer:Peer,roomId:string,userStream:MediaStream)=>{
-      const call = newPeer.call(roomId, userStream);
-      call.on('stream', (remoteStream) => {
-        setRemoteStreams((prevStreams) => ({
-          ...prevStreams,
-          [call.peer]: remoteStream,
-        }));
-      });
-    }
+  useEffect(() => {
+
     console.log('Joined room with ID:', roomId);
     if(roomId){
       if(byJoin=="1"){
         const newPeer = new Peer();
+        
+        newPeer.on('open',(id)=>{
+          setJoinedPeerId(id);
+        })
         console.log("joined")
            // Get user media
     navigator.mediaDevices.getUserMedia({ video: true, audio: true })
@@ -62,10 +71,8 @@ const Room = () => {
       });
       handleAnswercall(newPeer);
   }
-
- 
   }
-  }, []);
+  }, [remoteStreams]);
 
   return (
     <div style={{display:'grid'}}>

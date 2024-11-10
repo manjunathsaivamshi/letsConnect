@@ -12,7 +12,7 @@ const Home = () => {
           xs={12}
           sm={8}
           md={7}
-          sx={{backgroundImage:'url("/home_bg.jpeg")'}}
+          sx={{backgroundImage:'url("/letsConnect/home_bg.jpeg")'}}
         >
         <Dial></Dial>
         </Grid>
