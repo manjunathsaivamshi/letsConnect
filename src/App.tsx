@@ -6,7 +6,7 @@ function App() {
   
   return (
       <Routes>
-        <Route path='/' element={<Home />}/>
+        <Route path='/letsConnect' element={<Home />}/>
         <Route path='/room/:id/:byJoin' element={<Room />}/>
       </Routes>
   )
