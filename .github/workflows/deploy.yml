@@ -3,10 +3,7 @@ name: letsconnect
 on:
   push:
     branches:
-      - dev_001
-  pull_request:
-    branches:
-      - dev_001
+      - dev_001 # Deploys when code is pushed to the main branch
 
 jobs:
   build:
@@ -19,15 +16,21 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "20" # Specify the version of Node.js you want to use
+          node-version: "16" # Choose the appropriate Node version
 
       - name: Install dependencies
         run: npm install
 
       - name: Build the app
-        run: npm run build
-        continue-on-error: true # Builds your app for production
+        run: npm run build # Builds your app for production
+        continue-on-error: true
 
-      - name: Start Vite (optional, usually not necessary in CI)
-        run: npm run dev
-        continue-on-error: true # Optional: this allows the job to continue even if the Vite server fails to start
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          # The name of the branch to which the built files will be pushed
+          gh_token: ${{ secrets.GITHUB_TOKEN }} # Automatically available in the repo
+          publish_dir: ./dist # Path to the directory containing the build files
+          publish_branch: gh-pages # The branch where the files will be pushed
+          cname: letsconnectbymanjunath.com # Optional: Set if you're using a custom domain (optional)
+
