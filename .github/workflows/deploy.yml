@@ -1,0 +1,32 @@
+name: letsconnect
+
+on:
+  push:
+    branches:
+      - dev_001
+  pull_request:
+    branches:
+      - dev_001
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20" # Specify the version of Node.js you want to use
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build the app
+        run: npm run build # Builds your app for production
+
+      - name: Start Vite (optional, usually not necessary in CI)
+        run: npm run dev
+        continue-on-error: true # Optional: this allows the job to continue even if the Vite server fails to start
