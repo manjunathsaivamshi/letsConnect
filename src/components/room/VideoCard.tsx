@@ -10,7 +10,6 @@ const VideoCard = (props: videoCard) => {
       videoRef.current.srcObject = props.stream;
     }
   }, [props.stream]);
-
   return (
     <Card sx={{ maxWidth: 345, margin: 2 }}>
       <CardMedia

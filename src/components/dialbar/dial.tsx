@@ -2,25 +2,34 @@ import { Grid,Box, Button, Typography, TextField } from "@mui/material"
 import IconsMenu from "../utils/IconsMenu"
 import LinkIcon from '@mui/icons-material/Link'
 import WatchLaterIcon from '@mui/icons-material/WatchLater';
+import JoinFullIcon from '@mui/icons-material/JoinFull';
 import GroupIcon from '@mui/icons-material/Group';
 import { iconsMenu } from "../types/IconsMenu";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Peer from 'peerjs';
 
 export default function Dial() {
   const [dailBtnfc,setDailBtnfc]=useState(false);
+  const [roomIdGiven,setRoomIdGiven]=useState("");
+  const byJoin = useRef<number>(0);
   const dailRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate()
 
   const handleStartInstantMeeting = ()=>{
-
     const newPeer = new Peer();
     console.log(newPeer)
     newPeer.on('open', (id) => {
       console.log(id);
-      navigate(`/room/${id}`)
+      navigate(`/room/${id}/${byJoin.current}`)
     });
+  }
+  const handleRoomIdGiven = (e:React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>)=>{
+    setRoomIdGiven(e.target.value);
+  }
+  const handleJoinMeeting = ()=>{
+    byJoin.current = 1;
+    roomIdGiven.trim().length>0 ? navigate(`/room/${roomIdGiven}/${byJoin.current}`):alert('Invalid RoomID')
   }
 
   const handleDailBtn = () =>{
@@ -33,9 +42,9 @@ export default function Dial() {
       } 
     }
 
-  const meetingIcons = [<LinkIcon/>,<WatchLaterIcon/>,];
-  const meetingTitles = ['Start Instant Meeting', 'Create Meeting for Later']
-  const meetingClicks = [handleStartInstantMeeting,()=>{}]
+  const meetingIcons = [<LinkIcon/>,<WatchLaterIcon/>,<JoinFullIcon/>];
+  const meetingTitles = ['Start Instant Meeting','Join the Meeting','Create Meeting for Later']
+  const meetingClicks = [handleStartInstantMeeting,handleJoinMeeting,()=>{}]
   const meetingButton : iconsMenu = {
     icons:meetingIcons,
     titles:meetingTitles,
@@ -54,7 +63,7 @@ export default function Dial() {
 
   
   return (
-    <Grid container sx={{ height: '20vh', mt:'20vh'}}>
+    <Grid container sx={{ height: '20vh', mt:'25vh'}}>
           <Grid
           item
           xs={12}
@@ -62,7 +71,7 @@ export default function Dial() {
           md={5}
          sx={{display: 'flex',
               flexDirection: 'column',
-              alignItems: 'center',}}
+              alignItems: 'center',backgroundColor:'red'}}
         >
           { !dailBtnfc && 
           <Button disableFocusRipple startIcon={<GroupIcon/>} onClick={handleDailBtn}
@@ -81,6 +90,7 @@ export default function Dial() {
           md={7}
         >
           <Box component="form" noValidate  sx={{ mt: 2.5,width:'50%', height:'50%',ml:5 }}>
+            <Typography sx={{fontFamily: 'BlinkMacSystemFont',color:'white'}} variant="h5">Enter the Room ID</Typography>
             <TextField
                 margin="normal"
                 required
@@ -88,7 +98,9 @@ export default function Dial() {
                 id="roomId"
                 label={<GroupIcon/>}
                 name="roomId"
+                variant="outlined"
                 autoFocus
+                onChange={(e) => handleRoomIdGiven(e)}
               />
             </Box>
         </Grid>

@@ -1,46 +1,24 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import Peer from 'peerjs';
 import VideoCard from './VideoCard'; // Import your VideoCard component
+import { useParams } from 'react-router-dom';
+
+interface remotestreamtype {
+   [key: string]: MediaStream | null;
+}
 
 const Room = () => {
-  const { roomId } = useParams();
-  const [stream, setStream] = useState(undefined);
-  const [remoteStreams, setRemoteStreams] = useState({});
-
+  const params  = useParams();
+  const [stream, setStream] = useState<MediaStream | null>(null);
+  const [remoteStreams, setRemoteStreams] = useState<remotestreamtype>({});
+  const roomId = params.id;
+  const byJoin = params.byJoin;
   useEffect(() => {
-    // Initialize PeerJS instance
-    const newPeer = new Peer(); // Use PeerJS cloud service
-
-    newPeer.on('open', (id) => {
-      console.log('Joined room with ID:', id);
-    });
-
-    newPeer.on('call', (call) => {
-      // Answer incoming call
-      call.answer(stream);
-      call.on('stream', (remoteStream) => {
-        setRemoteStreams((prevStreams) => ({
-          ...prevStreams,
-          [call.peer]: remoteStream,
-        }));
-      });
-    });
-
-    // Get user media
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-      .then((userStream) => {
-        setStream(userStream);
-
-        // Handle local stream
-        const localVideo = document.createElement('video');
-        localVideo.srcObject = userStream;
-        localVideo.autoplay = true;
-        localVideo.muted = true;
-        document.body.appendChild(localVideo);
-
-        // Call the room's peer ID
-        const call = newPeer.call(roomId, userStream);
+    const handleAnswercall = (newPeer:Peer)=>{
+        newPeer.on('call', (call) => {
+        // Answer incoming call
+        if(stream!=null)
+          call.answer(stream);
         call.on('stream', (remoteStream) => {
           setRemoteStreams((prevStreams) => ({
             ...prevStreams,
@@ -48,18 +26,51 @@ const Room = () => {
           }));
         });
       });
+    }
 
-    setPeer(newPeer);
 
-    return () => {
-      newPeer.destroy();
-    };
-  }, [roomId]);
+    const handleDailCall =(newPeer:Peer,roomId:string,userStream:MediaStream)=>{
+      const call = newPeer.call(roomId, userStream);
+      call.on('stream', (remoteStream) => {
+        setRemoteStreams((prevStreams) => ({
+          ...prevStreams,
+          [call.peer]: remoteStream,
+        }));
+      });
+    }
+    console.log('Joined room with ID:', roomId);
+    if(roomId){
+      if(byJoin=="1"){
+        const newPeer = new Peer();
+        console.log("joined")
+           // Get user media
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+      .then((userStream) => {
+        setStream(userStream);
+      });
+
+        if(stream)
+          handleDailCall(newPeer,roomId,stream);
+        handleAnswercall(newPeer);
+      }
+      else{
+      const newPeer = new Peer(roomId);
+         // Get user media
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+      .then((userStream) => {
+        setStream(userStream);
+      });
+      handleAnswercall(newPeer);
+  }
+
+ 
+  }
+  }, []);
 
   return (
-    <div>
+    <div style={{display:'grid'}}>
       <h2>Room: {roomId}</h2>
-      <VideoCard peerId="local" isLocal={true} stream={stream} />
+      <VideoCard peerId={"local"} isLocal={true} stream={stream} />
       {Object.entries(remoteStreams).map(([peerId, remoteStream]) => (
         <VideoCard key={peerId} peerId={peerId} isLocal={false} stream={remoteStream} />
       ))}
