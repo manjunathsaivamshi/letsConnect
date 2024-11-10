@@ -1,11 +1,9 @@
 import TextField from '@mui/material/TextField';
 import { signIn } from '../types/SignIn';
-import SignInTheme from '../themes/SigninTheme';
-import { ThemeProvider } from '@emotion/react';
 
 export default function Signin(isSignIn:signIn) {
   return (
-    <ThemeProvider theme={SignInTheme}>
+    <>
       {!isSignIn.isSignIn?
       <>
        <TextField
@@ -57,6 +55,6 @@ export default function Signin(isSignIn:signIn) {
         type="password" />
       </>:<></>
     }
-  </ThemeProvider>    
+  </>    
   );
 }

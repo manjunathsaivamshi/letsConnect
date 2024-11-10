@@ -32,5 +32,3 @@ jobs:
           gh_token: ${{ secrets.GH_TOKEN }} # Automatically available in the repo
           publish_dir: ./dist # Path to the directory containing the build files
           publish_branch: gh-pages # The branch where the files will be pushed
-          cname: letsconnectbymanjunath.com # Optional: Set if you're using a custom domain (optional)
-

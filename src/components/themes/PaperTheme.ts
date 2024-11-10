@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material/styles'
-import { lightBlue, purple } from '@mui/material/colors'
+import { purple } from '@mui/material/colors'
 
 const PaperTheme = () => 
     createTheme({
