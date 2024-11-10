@@ -51,7 +51,7 @@ const Room = () => {
         newPeer.on('open',(id)=>{
           setJoinedPeerId(id);
         })
-        console.log("joined")
+        console.log("joined",joinedPeerId)
            // Get user media
     navigator.mediaDevices.getUserMedia({ video: true, audio: true })
       .then((userStream) => {
