@@ -1,0 +1,30 @@
+/* CSS to make the button semicircular */
+.semicircular-button {
+    width: 200px;
+    /* Width of the semicircle */
+    height: 60px;
+    /* Height of the semicircle */
+    border: none;
+    background-color: #6200ea;
+    /* Background color */
+    color: white;
+    /* Text color */
+    font-size: 18px;
+    /* Font size */
+    cursor: pointer;
+    border-radius: 0 0 100px 100px;
+    /* Make the top corners fully rounded */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Optional shadow for effect */
+    transition: all 0.3s ease;
+    
+    /* Smooth transition on hover */
+}
+
+.semicircular-button:hover {
+    background-color: #3700b3;
+    /* Darker shade on hover */
+}

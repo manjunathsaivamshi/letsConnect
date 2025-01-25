@@ -1,6 +1,7 @@
 import { Grid, CssBaseline } from "@mui/material"
 import Dial from "../dialbar/dial"
 import Sidebar from "../signin/Sidebar"
+import { useEffect, useRef, useState } from "react"
 
 const Home = () => {
   return (
@@ -9,10 +10,10 @@ const Home = () => {
         <CssBaseline />
           <Grid
           item
-          xs={12}
-          sm={8}
-          md={7}
-          sx={{backgroundImage:'url("/letsConnect/home_bg.jpeg")'}}
+          xs={0 }
+          sm={4}
+          md={8}
+          sx={{backgroundImage:'url("/home_bg.jpeg")', display:{xs:'none', sm: 'block'}}}
         >
         <Dial></Dial>
         </Grid>

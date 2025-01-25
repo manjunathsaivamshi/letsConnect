@@ -2,84 +2,87 @@ import { useEffect, useState } from 'react';
 import Peer from 'peerjs';
 import VideoCard from './VideoCard'; // Import your VideoCard component
 import { useParams } from 'react-router-dom';
+import {socket} from '../../soc'
 
 interface remotestreamtype {
    [key: string]: MediaStream | null;
 }
+function generateRandomString() {
+    return Array.from({ length: 4 }, () => 
+        String.fromCharCode(97 + Math.floor(Math.random() * 26))
+    ).join('');
+}
 
 const Room = () => {
-  const params  = useParams();
-  const [stream, setStream] = useState<MediaStream | null>(null);
-  const [joinedPeerId, setJoinedPeerId] = useState("");
-  const [remoteStreams, setRemoteStreams] = useState<remotestreamtype>({});
+  const params = useParams();
   const roomId = params.id;
-  const byJoin = params.byJoin;
-
-  const handleAnswercall = (newPeer:Peer)=>{
-        newPeer.on('call', (call) => {
-        // Answer incoming call
-        if(stream!=null)
-          call.answer(stream);
-        call.on('stream', (remoteStream) => {
-          setRemoteStreams((prevStreams) => ({
-            ...prevStreams,
-            [call.peer]: remoteStream,
-          }));
-        });
-      });
-    }
-
-  const handleDailCall =(newPeer:Peer,roomId:string,userStream:MediaStream)=>{
-    const call = newPeer.call(roomId, userStream);
-    // if(userStream!=null)
-    //     call.answer(userStream);
-    call.on('stream', (remoteStream) => {
-      setRemoteStreams((prevStreams) => ({
-        ...prevStreams,
-        [call.peer]: remoteStream,
-      }));
-    });
-  }
+  const userId = params.userId;
+  const [myPeer, setMyPeer] = useState<Peer>();
+  const [stream, setStream] = useState<MediaStream>();
+  const [remoteStreams, setRemoteStreams] = useState<Record<string,MediaStream>>({});
+  const [roomUsers, setRoomUsers] = useState({});
+  const userName = generateRandomString();
 
   useEffect(() => {
-
-    console.log('Joined room with ID:', roomId);
-    if(roomId){
-      if(byJoin=="1"){
-        const newPeer = new Peer();
+        if(!userId) return;
+        const peer = new Peer(userId,{
+          host: 'localhost',  // PeerJS server host
+          port: 5500,         // Port where the PeerJS server is running
+          path: '/',
+        });
+        peer.on('open', () => {
+          console.log('Peer connected with ID:', peer.id); // Now peer.id should be available
+          setMyPeer(peer);  // Set the peer once it's connected
+        });
+        socket.emit("join-room", { roomId: roomId, peerId: userId, userName: userName });  
+        try {
+            navigator.mediaDevices
+                .getUserMedia({ video: true, audio: true })
+                .then((stream) => {
+                    setStream(stream);
+                });
+        } 
+        catch (error) {
+            console.error(error);
+        }
         
-        newPeer.on('open',(id)=>{
-          setJoinedPeerId(id);
-        })
-        console.log("joined",joinedPeerId)
-           // Get user media
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-      .then((userStream) => {
-        setStream(userStream);
-      });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-        if(stream)
-          handleDailCall(newPeer,roomId,stream);
-        handleAnswercall(newPeer);
-      }
-      else{
-      const newPeer = new Peer(roomId);
-         // Get user media
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-      .then((userStream) => {
-        setStream(userStream);
+  useEffect(() => {
+    if(!stream) return;
+    if(!myPeer) return;
+
+    socket.on("user-joined", ({peerId, userName}) => {
+        console.log(peerId,userName)
+        
+        const call = myPeer.call(peerId, stream);
+        call.on("stream", (peerStream) => {
+            setRemoteStreams(remoteStreams =>({
+              ...remoteStreams,
+              [call.peer]: peerStream
+            }));
+        });
+
+    });
+    
+    myPeer.on("call", (call) => {
+      call.answer(stream);
+      call.on("stream", (peerStream) => {
+          setRemoteStreams(remoteStreams =>({
+            ...remoteStreams,
+            [call.peer]: peerStream
+          }));
       });
-      handleAnswercall(newPeer);
-  }
-  }
-  }, [remoteStreams]);
+  });
+    }, [myPeer,stream]);
 
   return (
     <div style={{display:'grid'}}>
       <h2>Room: {roomId}</h2>
-      <VideoCard peerId={"local"} isLocal={true} stream={stream} />
-      {Object.entries(remoteStreams).map(([peerId, remoteStream]) => (
-        <VideoCard key={peerId} peerId={peerId} isLocal={false} stream={remoteStream} />
+      <VideoCard userName={userId} stream={stream?stream:null}/>
+      {Object.entries(remoteStreams).map(([peerId, peerStream])=>(
+        <VideoCard userName={peerId} stream={peerStream?peerStream:null}/>
       ))}
     </div>
   );

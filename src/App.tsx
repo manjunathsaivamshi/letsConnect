@@ -6,8 +6,8 @@ function App() {
   
   return (
       <Routes>
-        <Route path='/letsConnect' element={<Home />}/>
-        <Route path='/room/:id/:byJoin' element={<Room />}/>
+        <Route path='/' element={<Home />}/>
+        <Route path='/room/:id/:userId' element={<Room />}/>
       </Routes>
   )
 }

@@ -1,5 +1,5 @@
+
 export type videoCard ={
-    peerId:string,
-    isLocal:boolean,
+    userName:string | undefined,
     stream:MediaStream | null
 }

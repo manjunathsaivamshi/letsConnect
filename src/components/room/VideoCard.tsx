@@ -16,12 +16,12 @@ const VideoCard = (props: videoCard) => {
         component="video"
         ref={videoRef}
         autoPlay
-        muted={props.isLocal}
+        muted = {true}
         sx={{ height: 200 }}
       />
       <CardContent>
         <Typography gutterBottom variant="h6" component="div">
-          {props.isLocal ? 'You' : `User ${props.peerId}`}
+          {props.userName}
         </Typography>
       </CardContent>
     </Card>
