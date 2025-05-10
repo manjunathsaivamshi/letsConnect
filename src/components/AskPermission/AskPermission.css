@@ -1,0 +1,103 @@
+.tablet {
+  position: relative;
+  height: 450px;
+  border: 16px solid;
+  color: #000000;
+  border-top-width: 60px;
+  border-bottom-width: 60px;
+  border-radius: 36px;
+}
+
+/* The horizontal line on the top of the device */
+.tablet:before {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 5px;
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border-radius: 10px;
+}
+
+/* The circle on the bottom of the device */
+.tablet:after {
+  content: '';
+  display: block;
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  left: 50%;
+  bottom: -65px;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border-radius: 50%;
+}
+
+/* The screen (or content) of the device */
+.content {
+  height: 331px;
+  margin: -1px;
+}
+
+.myVideo{
+  padding: 0;
+  object-fit: cover;
+  height: 100%;
+}
+
+/* Buttons */
+.btn-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 50px;
+}
+
+@media only screen and (max-width: 600px) {
+  .tablet {
+    height: 350px;
+    border-top-width: 35px;
+    border-bottom-width: 35px;
+  }
+  
+  .tablet:before{
+    top: -20px;
+  }
+
+  .tablet:after{
+    width: 20px;
+    height: 20px;
+    bottom: -40px;
+  }
+
+  .content {
+    height: 282px;
+  }
+  
+  .btn-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .icons{
+    font-size: 1.5em;
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  .permission{
+    height:100vh;
+  }
+}
+
+@media only screen and (min-width: 2560px) {
+  .tablet{
+    height: 600px;
+  }
+
+  .content{
+    height: 480px;
+  }
+}
